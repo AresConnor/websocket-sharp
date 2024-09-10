@@ -1180,6 +1180,8 @@ namespace WebSocketSharp.Net
     {
       Headers.Set (name, value);
     }
+    
+    public bool IsDisposed () => _disposed;
 
     #endregion
 

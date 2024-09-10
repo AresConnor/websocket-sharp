@@ -749,6 +749,8 @@ namespace WebSocketSharp.Server
     /// Occurs when the server receives an HTTP TRACE request.
     /// </summary>
     public event EventHandler<HttpRequestEventArgs> OnTrace;
+    
+    public event EventHandler<WebSocketRequestEventArgs> OnWebSocket; 
 
     #endregion
 
@@ -924,7 +926,12 @@ namespace WebSocketSharp.Server
             state => {
               try {
                 if (ctx.Request.IsUpgradeRequest ("websocket")) {
-                  processRequest (ctx.GetWebSocketContext (null));
+                  var e = new WebSocketRequestEventArgs (ctx);
+                  
+                  OnWebSocket?.Invoke (this, e);
+                  
+                  if (ctx.Response.IsDisposed ())
+                    processRequest (ctx.GetWebSocketContext (null));
 
                   return;
                 }
